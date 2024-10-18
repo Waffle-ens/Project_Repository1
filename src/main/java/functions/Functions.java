@@ -1,9 +1,8 @@
 package functions;
 
-import javax.lang.model.SourceVersion;
 import java.util.*;
 
-public class Functions implements BoardFunctions {
+public class Functions implements PostFunctions {
 
     private List<Posts> postsList;
     Scanner scanner = new Scanner(System.in); //url 기능을 추가면서 scanner 객체가 필요해짐
