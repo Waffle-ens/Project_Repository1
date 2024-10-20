@@ -1,4 +1,4 @@
-package functions;
+package functions.postfunc;
 
 public class PostsNotFoundException extends RuntimeException {
     public PostsNotFoundException(String message) {

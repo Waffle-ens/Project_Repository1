@@ -1,8 +1,10 @@
-package functions;
+package functions.postfunc;
+
+import functions.UrlPram;
 
 import java.util.*;
 
-public interface PostFunctions {
+public interface PostFunctionsInterface {
     void createPost(List<UrlPram> params);//작성
     void readPost(List<UrlPram> params);//조회
     void deletePost(List<UrlPram> params);//삭제

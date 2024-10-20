@@ -1,4 +1,4 @@
-package functions;
+package functions.postfunc;
 
 public class Posts {
     // 게시글 클래스
