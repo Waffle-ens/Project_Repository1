@@ -34,7 +34,7 @@ public class SurfBoard {
                 }
 
             } catch (UrlNotFoundException e) {
-                throw new RuntimeException(e);
+                System.out.println("URL을 정확히 입력해주세요.");
             }
 
         }

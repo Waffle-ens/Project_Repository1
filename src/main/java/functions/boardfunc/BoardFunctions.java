@@ -54,6 +54,7 @@ public class BoardFunctions implements BoardFunctionsInterface {
                                 break;
                             }
                         }
+
                         if (isExist != null) {
                             isExist.setValue(value);
                         } else {
@@ -166,7 +167,7 @@ public class BoardFunctions implements BoardFunctionsInterface {
 
         String boardName = getParamValue(params, "boardName");
 
-        if (boardName == null) { // 조회할 이름이 제공되지 않는경우
+        if (boardName.isEmpty()) { // 조회할 이름이 제공되지 않는경우
             System.out.println("조회할 게시판 이름이 있어야합니다.");
             return;
         }
@@ -185,7 +186,7 @@ public class BoardFunctions implements BoardFunctionsInterface {
         }
 
         List<Posts> posts = searchBoard.getPosts();
-        if (posts == null) {
+        if (posts.isEmpty()) {
 
             System.out.println("게시판이 비어있는데요..?");
 
