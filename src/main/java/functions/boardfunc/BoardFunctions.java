@@ -1,12 +1,13 @@
 package functions.boardfunc;
 
+import functions.CommonFunctions;
 import functions.UrlNotFoundException;
 import functions.UrlPram;
 import functions.postfunc.Posts;
 
 import java.util.*;
 
-public class BoardFunctions implements BoardFunctionsInterface {
+public class BoardFunctions extends CommonFunctions implements BoardFunctionsInterface {
 
     private List<Boards> boardList;
     private Scanner scanner = new Scanner(System.in);
@@ -17,53 +18,12 @@ public class BoardFunctions implements BoardFunctionsInterface {
 
 
     public void parsingUrl(String url) throws UrlNotFoundException {
-        try {
-
-            String[] blocks = url.split("\\?",2); // 파라미터 분리
-            String[] path = blocks[0].split("/"); // 경로 분리
-
-            if ( path.length < 3 ){ // 정상적인 URL인지 검사
-
-                throw new UrlNotFoundException("URL이 올바르지 않습니다.");
-
-            }
-
-            String actions = path[2];
 
 
-            List<UrlPram> params = new ArrayList<>();
-
-            if (blocks.length > 1) {
-
-                String[] paramSet = blocks[1].split("&");
-
-                for (String set : paramSet) {
-
-                    String[] keyNum = set.split("=");
-
-                    if (keyNum.length == 2) {
-
-                        String key = keyNum[0];
-                        String value = keyNum[1];
-
-                        UrlPram isExist = null;
-
-                        for (UrlPram param : params) {
-                            if (param.getKey().equals(key)) {
-                                isExist = param;
-                                break;
-                            }
-                        }
-
-                        if (isExist != null) {
-                            isExist.setValue(value);
-                        } else {
-                            params.add(new UrlPram(key, value));
-                        }
-
-                    }
-                }
-            }
+            //기존의 중복코드 CommonFunctions 에 재정의
+            ParsedUrl parsedUrl = CommonFunctions.parseUrl(url);
+            String actions = parsedUrl.getAction();
+            List<UrlPram> params = parsedUrl.getParams();
 
             switch (actions) { // 파싱한 url 파라미터 기능 구현부
                 case "create":
@@ -82,10 +42,6 @@ public class BoardFunctions implements BoardFunctionsInterface {
                     throw new UrlNotFoundException(actions + " (은)는 유효한 기능이 아닙니다.");
             }
 
-        } catch ( UrlNotFoundException e ) {
-            System.out.println("오류! 정확한 URL을 입력해주세요.");
-        }
-
     }
 
 
@@ -100,16 +56,6 @@ public class BoardFunctions implements BoardFunctionsInterface {
 
     }
 
-    private String getParamValue(List<UrlPram> params, String key) {
-
-        for (UrlPram param : params) {
-
-            if (param.getKey().equals(key)) {
-                return param.getValue();
-            }
-        }
-        return null;
-    }
 
     public Boards getBoard(List<UrlPram> params) { // 각 메서드에 사용할 boardId를 추출해서 반환하도록 설정
 

@@ -1,11 +1,12 @@
 package functions.postfunc;
 
+import functions.CommonFunctions;
 import functions.UrlNotFoundException;
 import functions.UrlPram;
 
 import java.util.*;
 
-public class PostFunctions implements PostFunctionsInterface {
+public class PostFunctions extends CommonFunctions implements PostFunctionsInterface {
 
     private List<Posts> postsList;
     Scanner scanner = new Scanner(System.in); //url 기능을 추가면서 scanner 객체가 필요해짐
@@ -17,52 +18,12 @@ public class PostFunctions implements PostFunctionsInterface {
 
     @Override
     public void parsingUrl(String url) throws UrlNotFoundException {
-        try {
-
-            String[] blocks = url.split("\\?",2); // 파라미터 분리
-            String[] path = blocks[0].split("/"); // 경로 분리
-
-            if ( path.length < 3 ){ // 정상적인 URL인지 검사
-
-                throw new UrlNotFoundException("URL이 올바르지 않습니다.");
-
-            }
-
-            String actions = path[2];
 
 
-            List<UrlPram> params = new ArrayList<>();
-
-            if (blocks.length > 1) {
-
-                String[] paramSet = blocks[1].split("&");
-
-                for (String set : paramSet) {
-
-                    String[] keyNum = set.split("=");
-
-                    if (keyNum.length == 2) {
-
-                        String key = keyNum[0];
-                        String value = keyNum[1];
-
-                        UrlPram isExist = null;
-
-                        for (UrlPram param : params) {
-                            if (param.getKey().equals(key)) {
-                                isExist = param;
-                                break;
-                            }
-                        }
-                        if (isExist != null) {
-                            isExist.setValue(value);
-                        } else {
-                            params.add(new UrlPram(key, value));
-                        }
-
-                    }
-                }
-            }
+            //기존의 중복코드 CommonFunctions 에 재정의
+            ParsedUrl parsedUrl = CommonFunctions.parseUrl(url);
+            String actions = parsedUrl.getAction();
+            List<UrlPram> params = parsedUrl.getParams();
 
             switch (actions) { // 파싱한 url 파라미터 기능 구현부
                 case "create":
@@ -84,10 +45,6 @@ public class PostFunctions implements PostFunctionsInterface {
                     throw new UrlNotFoundException(actions + " (은)는 유효한 기능이 아닙니다.");
             }
 
-        } catch ( UrlNotFoundException e ) {
-            System.out.println("오류! 정확한 URL을 입력해주세요.");
-        }
-
     }
 
     @Override
@@ -104,19 +61,6 @@ public class PostFunctions implements PostFunctionsInterface {
 
     }
 
-    //가독성을 위해 이위치에 작성 url의 파라미터값을 추출하도록 설정
-    //추출한 파라미터 key에 해당하는 값을 가져와서 리턴하고 아니면 안하면되는데 왜 리턴이 붙어야하는거지
-    //반환타입을 String 으로 지정했으니 그렇지,, 리턴은 무조건 해야하니 null값을 리턴하도록 수정함.
-    private String getParamValue(List<UrlPram> params, String key) {
-
-        for (UrlPram param : params) {
-
-            if (param.getKey().equals(key)) {
-                return param.getValue();
-            }
-        }
-        return null;
-    }
 
     @Override
     public void readPost(List<UrlPram> params) {
@@ -128,7 +72,7 @@ public class PostFunctions implements PostFunctionsInterface {
 
         String postId = getParamValue(params, "postId"); // 이전의 scanner 대체
 
-        if(postId == null) { // p
+        if(postId == null) {
             System.out.println("postId가 제공되어야 합니다.");
             return;
         }
